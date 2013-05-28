@@ -258,7 +258,7 @@ void onSleepTimeout()
     exitValue = 100;
 }
 
-// Handle the different unix signals we might recieve
+// Handle the different unix signals we might receive
 void handleSignal(int sig)
 {
     if (!exitSignal)
