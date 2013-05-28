@@ -219,6 +219,8 @@ int main(int argc, char **argv)
     Input *input = Input::Instance();
     input->keyPressed_signal.connect(boost::bind(&ClientCore::pushCommand, clientcore, _1));
 
+    // start client and wait for it to exit
+    clientcore->start();
     while (clientcore->isRunning())
         usleep(100000);
 
