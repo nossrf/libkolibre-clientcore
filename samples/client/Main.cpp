@@ -239,6 +239,8 @@ int main(int argc, char **argv)
     if(inputDev.compare("") != 0)
         input->set_input_device(inputDev);
 
+    // start client and wait for it to exit
+    clientcore->start();
     while (clientcore->isRunning())
         usleep(100000);
 
