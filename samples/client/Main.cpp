@@ -226,10 +226,8 @@ int main(int argc, char **argv)
     ClientCore::setLanguage(language);
 
     if (useragent.empty()) useragent = "KolibreSampleClient/0.0.1";
-    ClientCore *clientcore = new ClientCore(serviceUrl, useragent);
-
-    clientcore->setUsername(username);
-    clientcore->setPassword(password, rememberPassword);
+    ClientCore *clientcore = new ClientCore(useragent);
+    clientcore->addDaisyOnlineService("main", serviceUrl, username, password, rememberPassword);
 
     // Connect slots to signals
     clientcore->sleepTimeout_signal.connect(&onSleepTimeout);
