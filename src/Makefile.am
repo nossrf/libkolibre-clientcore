@@ -29,6 +29,8 @@ MediaSourceManager.cpp \
 Navi.cpp \
 NaviListImpl.cpp \
 RootNode.cpp \
+Menu/ContextMenuNode.cpp \
+Menu/VirtualContextMenuNode.cpp \
 Menu/AutoPlayNode.cpp \
 Menu/BookInfoNode.cpp \
 Menu/TempoNode.cpp \
@@ -67,6 +69,8 @@ EXTRA_DIST = CommandQueue2/CommandQueue.h \
 			 NaviListImpl.h \
 			 Utils.h \
 			 RootNode.h \
+			 Menu/ContextMenuNode.h \
+			 Menu/VirtualContextMenuNode.h \
 			 Menu/AutoPlayNode.h \
 			 Menu/BookInfoNode.h \
 			 Menu/NarratedNode.h \

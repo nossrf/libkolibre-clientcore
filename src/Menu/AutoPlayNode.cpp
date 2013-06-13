@@ -35,7 +35,8 @@ log4cxx::LoggerPtr autoPlayNodeLog(log4cxx::Logger::getLogger("kolibre.clientcor
 
 using namespace naviengine;
 
-AutoPlayNode::AutoPlayNode()
+AutoPlayNode::AutoPlayNode(const std::string& name, const std::string playBeforeOnOpen) :
+    VirtualContextMenuNode(name, playBeforeOnOpen)
 {
     isOpen = false;
     currentChild = 0;

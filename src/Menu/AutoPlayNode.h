@@ -20,15 +20,15 @@
 #ifndef NAVIENGINE_AUTOPLAYNODE
 #define NAVIENGINE_AUTOPLAYNODE
 
-#include <Nodes/VirtualMenuNode.h>
+#include "VirtualContextMenuNode.h"
 
 #include <map>
 #include <string>
 
-class AutoPlayNode: public naviengine::VirtualMenuNode
+class AutoPlayNode: public VirtualContextMenuNode
 {
 public:
-    AutoPlayNode();
+    AutoPlayNode(const std::string&, const std::string);
 
     bool up(naviengine::NaviEngine&);
     bool prev(naviengine::NaviEngine&);
