@@ -21,6 +21,8 @@
 #include "../Defines.h"
 
 #include <Narrator.h>
+#include <Player.h>
+#include <DaisyHandler.h>
 
 #include <log4cxx/logger.h>
 
@@ -31,13 +33,15 @@ NarratedNode::NarratedNode(const std::string& name)
 {
     name_ = name;
     narratedStrings.push_back(name);
+    isTitleNode_ = false;
 }
 
-NarratedNode::NarratedNode(const std::string& name, int number)
+NarratedNode::NarratedNode(const std::string& name, int number, bool titleNode)
 {
     appendNarratedString(number);
     name_ = name;
     narratedStrings.push_back(name);
+    isTitleNode_ = titleNode;
 
     std::ostringstream uri_from_anything;
     uri_from_anything << reinterpret_cast<long>(this);
@@ -198,7 +202,7 @@ void NarratedNode::appendNarratedDate(int day, int month, int year)
     params.push_back(NarratedObject_t("year", year));
     params.push_back(NarratedObject_t("yearnum", year));
 
-    // Calculate the day this date ocurred (http://users.aol.com/s6sj7gt/mikecal.htm)
+    // Calculate the day this date occurred (http://users.aol.com/s6sj7gt/mikecal.htm)
     int daynum = (day += month < 3 ? year-- : year - 2, 23 * month / 9 + day + 4 + year / 4 - year / 100 + year / 400) % 7;
     params.push_back(NarratedObject_t("dayname", daynum));
 
@@ -208,12 +212,10 @@ void NarratedNode::appendNarratedDate(int day, int month, int year)
 
 bool NarratedNode::onNarrate()
 {
-    for (std::vector<std::string>::size_type strNum = 0;
-            strNum < narratedStrings.size(); ++strNum)
+    for (std::vector<std::string>::size_type strNum = 0; strNum < narratedStrings.size(); ++strNum)
     {
         std::vector<NarratedObject_t> params = parameters[strNum];
-        for (std::vector<NarratedObject_t>::size_type pNum = 0;
-                pNum < params.size(); ++pNum)
+        for (std::vector<NarratedObject_t>::size_type pNum = 0; pNum < params.size(); ++pNum)
         {
             NarratedObject_t no = params[pNum];
             LOG4CXX_DEBUG(narratedNodeLog, "Setting parameter " << no.mKey << " of " << narratedStrings[strNum]);
@@ -225,6 +227,17 @@ bool NarratedNode::onNarrate()
         if (params.empty())
             LOG4CXX_DEBUG(narratedNodeLog, "No parameters for " << narratedStrings[strNum]);
         Narrator::Instance()->play(narratedStrings[strNum].c_str());
+    }
+
+    if (isTitleNode_)
+    {
+        usleep(500000); while (Narrator::Instance()->isSpeaking()) usleep(100000);
+        LOG4CXX_FATAL(narratedNodeLog, "Play title");
+        amis::DaisyHandler::Instance()->playTitle();
+        Player::Instance()->resume();
+        usleep(500000); while (Player::Instance()->isPlaying()) usleep(100000);
+        Narrator::Instance()->playLongpause(); // this will take us to the next child automatically
+        LOG4CXX_FATAL(narratedNodeLog, "Continue to next node");
     }
     return true;
 }

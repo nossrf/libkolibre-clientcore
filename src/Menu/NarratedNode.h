@@ -39,7 +39,7 @@ class NarratedNode: public naviengine::AnyNode
 {
 public:
     NarratedNode(const std::string& name);
-    NarratedNode(const std::string& name, int number);
+    NarratedNode(const std::string& name, int number, bool titleNode = false);
     void appendNarratedString(const std::string& append);
     void appendNarratedString(const std::string& append, const std::string parameter, int value);
     void appendNarratedString(int number);
@@ -101,6 +101,7 @@ public:
 private:
     std::vector<std::string> narratedStrings;
     std::map<int, std::vector<NarratedObject_t> > parameters;
+    bool isTitleNode_;
 };
 
 #endif

@@ -42,8 +42,6 @@ public:
     DaisyNavi();
     ~DaisyNavi();
 
-    // naviengine node navigation methods
-
     /**
      * select changes navi level
      */

@@ -142,7 +142,6 @@ bool DaisyNavi::menu(NaviEngine& navi)
                 AnyNode* pageJump = new GotoPageNode(pageCount, this);
                 jumpNode->addNode(pageJump);
             }
-
         }
     }
 
@@ -171,10 +170,11 @@ void DaisyNavi::buildInfoNode(BookInfoNode* info)
     info->info_ = _("navigate using left and right arrows. if no input is given, all information will be read automatically");
 
     // TITLE
-    NarratedNode* title = new NarratedNode(_N("content title"), ++childNumber);
-    title->appendNarratedString(parent_->name_); // This code belongs in DaisyOnlineBookNode.
-    title->appendNarratedString(_N("longpause"));
+    bool isTitleNode = true;
+    NarratedNode* title = new NarratedNode(_N("content title"), ++childNumber, isTitleNode);
+    // we cannot append anything else to title node
     info->addNode(title);
+
     // TIMEINFO
     if (bookInfo->hasTime)
     {
