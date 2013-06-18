@@ -149,6 +149,13 @@ bool DaisyOnlineNode::up(NaviEngine& navi)
     return ret;
 }
 
+bool DaisyOnlineNode::narrateName()
+{
+    const bool isSelfNarrated = true;
+    Narrator::Instance()->play(_N("online service"));
+    return isSelfNarrated;
+}
+
 bool DaisyOnlineNode::narrateInfo()
 {
     const bool isSelfNarrated = true;
