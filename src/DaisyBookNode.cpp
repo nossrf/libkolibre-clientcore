@@ -139,6 +139,20 @@ bool DaisyBookNode::process(NaviEngine& navi, int command, void* data)
     return result;
 }
 
+bool DaisyBookNode::narrateName()
+{
+    if (not pDaisyNavi->isOpen())
+    {
+        LOG4CXX_INFO(daisyBookNodeLog, "Opening DaisyBook " << daisyUri_);
+        if (not pDaisyNavi->open(daisyUri_))
+        {
+            LOG4CXX_ERROR(daisyBookNodeLog, "Could not open book")
+            return false;
+        }
+    }
+    return pDaisyNavi->narrateName();
+}
+
 bool DaisyBookNode::onNarrate()
 {
     // Parent node does the narration

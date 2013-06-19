@@ -85,7 +85,10 @@ public:
 
     bool process(naviengine::NaviEngine&, int command, void* data = 0);
 
+    bool narrateName();
+
     bool playAudio(std::string, long long, long long);
+    bool playTitleAudio(std::string, long long, long long);
 
     enum BookmarkState
     {
@@ -107,6 +110,7 @@ public:
 private:
     // signals and slots
     bool playerMessageSlot(Player::playerMessage);
+    bool playerMessageSlot2(Player::playerMessage);
     bool playerTimeSlot(Player::timeData td);
     boost::signals2::connection playerMsgCon;
     boost::signals2::connection playerTimeCon;

@@ -404,6 +404,12 @@ static bool PlayAudio_static(string uri, long long startms, long long stopms, vo
     return dn->playAudio(uri, startms, stopms);
 }
 
+static bool PlayTitleAudio_static(string uri, long long startms, long long stopms, void *data)
+{
+    DaisyNavi *dn = static_cast<DaisyNavi *>(data);
+    return dn->playTitleAudio(uri, startms, stopms);
+}
+
 bool DaisyNavi::onOpen(NaviEngine&)
 {
     // connect to player slots
@@ -649,6 +655,15 @@ bool DaisyNavi::playAudio(string filename, long long startms, long long stopms)
     return true;
 }
 
+bool DaisyNavi::playTitleAudio(string filename, long long startms, long long stopms)
+{
+    usleep(500000); while (Narrator::Instance()->isSpeaking()) usleep(100000);
+    player->open(filename, startms, stopms);
+    player->resume();
+    usleep(500000); while (Player::Instance()->isPlaying()) usleep(100000);
+    return true;
+}
+
 void DaisyNavi::setPlayerReallySendEOS(bool setting)
 {
     pthread_mutex_lock(playerCallbackMutex);
@@ -746,6 +761,21 @@ bool DaisyNavi::playerMessageSlot(Player::playerMessage msg)
         break;
     }
     return false;
+}
+
+bool DaisyNavi::playerMessageSlot2(Player::playerMessage msg)
+{
+    switch (msg)
+    {
+    case Player::PLAYER_ATEOS:
+        player->stop();
+        return true;
+    case Player::PLAYER_CONTINUE:
+        player->stop();
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool DaisyNavi::isOpen()
@@ -1601,6 +1631,18 @@ bool DaisyNavi::process(NaviEngine& navi, int command, void* data)
     }
 
     return true;
+}
+
+bool DaisyNavi::narrateName()
+{
+    boost::signals2::connection playerMsgCon2 = player->doOnPlayerMessage(boost::bind(&DaisyNavi::playerMessageSlot2, this, _1));
+
+    dh->setupBook();
+    dh->setPlayFunction(PlayTitleAudio_static, this);
+    dh->playTitle();
+
+    playerMsgCon2.disconnect();
+    return false;
 }
 
 void DaisyNavi::postBookData()

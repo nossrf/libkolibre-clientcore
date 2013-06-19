@@ -42,6 +42,7 @@ public:
     bool onOpen(naviengine::NaviEngine&);
     void beforeOnOpen();
     bool process(naviengine::NaviEngine&, int, void*);
+    bool narrateName();
     bool onNarrate();
 
 protected:
