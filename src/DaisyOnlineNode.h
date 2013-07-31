@@ -88,6 +88,7 @@ private:
 
     bool firstChildNotOpened_;
     bool loggedIn_;
+    bool serviceUpdated_;
     NaviList navilist;
     AnyNode* currentChild_;
 
