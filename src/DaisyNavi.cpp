@@ -930,6 +930,18 @@ bool DaisyNavi::process(NaviEngine& navi, int command, void* data)
     setPlayerReallySendEOS(false);
     DaisyHandler::BookInfo *bookInfo;
 
+    if (!bBookIsOpen)
+    {
+        if (command == COMMAND_NARRATORFINISHED)
+        {
+            LOG4CXX_WARN(daisyNaviLog, "Narrator finished but cannot resume player since book is not open");
+            return false;
+        }
+
+        LOG4CXX_WARN(daisyNaviLog, "Book is not open. skipping command");
+        return false;
+    }
+
     // If we are pausing, any key should continue playback
     if (bPlaybackIsPaused && command != COMMAND_INFO && command != COMMAND_NARRATORFINISHED)
     {
@@ -953,12 +965,6 @@ bool DaisyNavi::process(NaviEngine& navi, int command, void* data)
     switch (command)
     {
     case COMMAND_NARRATORFINISHED:
-        if (!bBookIsOpen)
-        {
-            LOG4CXX_WARN(daisyNaviLog, "Narrator finished but cannot resume player since book is not open");
-            return false;
-        }
-
         if (bPlaybackIsPaused)
         {
             LOG4CXX_WARN(daisyNaviLog, "Narrator finished but wont resume player in PAUSE mode");
@@ -989,11 +995,7 @@ bool DaisyNavi::process(NaviEngine& navi, int command, void* data)
 
     case COMMAND_UP:
         LOG4CXX_INFO(daisyNaviLog, "COMMAND_UP received");
-        if (!bBookIsOpen)
-        {
-            LOG4CXX_WARN(daisyNaviLog, "Book is not open, no need to process COMMAND_UP");
-            return false;
-        }
+
         player->pause();
         dh->increaseNaviLevel();
         // If we went too high up close the book and return control to navi
@@ -1128,6 +1130,7 @@ bool DaisyNavi::process(NaviEngine& navi, int command, void* data)
 
     case COMMAND_RIGHT:
         LOG4CXX_INFO(daisyNaviLog, "COMMAND_RIGHT received");
+
         switch (dh->getNaviLevel())
         {
         case DaisyHandler::BEGEND:
@@ -1221,6 +1224,7 @@ bool DaisyNavi::process(NaviEngine& navi, int command, void* data)
 
     case COMMAND_LEFT:
         LOG4CXX_INFO(daisyNaviLog, "COMMAND_LEFT received");
+
         switch (dh->getNaviLevel())
         {
         case DaisyHandler::BEGEND:
