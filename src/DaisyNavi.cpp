@@ -758,6 +758,15 @@ bool DaisyNavi::isOpen()
 
 bool DaisyNavi::open(const string &uri)
 {
+    // connect to player slots
+    if (not playerMsgCon.connected())
+    {
+        playerMsgCon = player->doOnPlayerMessage(boost::bind(&DaisyNavi::playerMessageSlot, this, _1));
+    }
+    if (not playerTimeCon.connected())
+    {
+        playerTimeCon = player->doOnPlayerTime(boost::bind(&DaisyNavi::playerTimeSlot, this, _1));
+    }
 
     string newuri = uri;
     // Extract protocol, servername and path from url
