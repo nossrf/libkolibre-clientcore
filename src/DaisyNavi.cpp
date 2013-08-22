@@ -846,6 +846,17 @@ bool DaisyNavi::closeBook()
     LOG4CXX_DEBUG(daisyNaviLog, "closing book");
     player->stop();
     dh->closeBook();
+
+    // disconnect from player slots
+    if (playerMsgCon.connected())
+    {
+        playerMsgCon.disconnect();
+    }
+    if (playerTimeCon.connected())
+    {
+        playerTimeCon.disconnect();
+    }
+
     DaisyNaviLevel level("TOPLEVEL");
     cq2::Command<DaisyNaviLevel> daisyLevel(level);
     daisyLevel();
